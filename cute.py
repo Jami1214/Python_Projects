@@ -1,4 +1,4 @@
-import pandas as pd
+mport pandas as pd
 import streamlit as st
 
 # --- Page Configuration ---
@@ -9,60 +9,154 @@ st.set_page_config(
     initial_sidebar_state="expanded",
 )
 
-# --- Dynamic Vibrant Custom CSS ---
+# --- Rich, Clean Design System ---
 st.markdown(
     """
     <style>
-    .stApp {
-        background: linear-gradient(135deg, #1A0B2E 0%, #2D124D 50%, #0F172A 100%);
-        color: #FFFFFF;
+    @import url('https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700;800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500;600&display=swap');
+
+    :root {
+        --bg-1: #0B0A1A;
+        --bg-2: #17123A;
+        --bg-3: #241A4D;
+        --surface: rgba(255, 255, 255, 0.045);
+        --surface-border: rgba(242, 197, 114, 0.18);
+        --gold: #F2C572;
+        --gold-soft: rgba(242, 197, 114, 0.16);
+        --violet: #A78BFA;
+        --text-primary: #F4F1FB;
+        --text-secondary: #ADA6C9;
+        --success: #4ADE80;
+        --error: #FB7185;
     }
+
+    html, body, [class*="css"] { font-family: 'Inter', sans-serif; }
+
+    /* Background: rich gradient + faint dot-grid texture */
+    .stApp {
+        background:
+            radial-gradient(circle at 15% 10%, rgba(167, 139, 250, 0.10) 0%, transparent 45%),
+            radial-gradient(circle at 85% 90%, rgba(242, 197, 114, 0.08) 0%, transparent 45%),
+            linear-gradient(160deg, var(--bg-1) 0%, var(--bg-2) 55%, var(--bg-3) 100%);
+        background-attachment: fixed;
+        color: var(--text-primary);
+    }
+
+    /* Baseline text contrast fix — applies to markdown, labels, radio options, captions */
+    .stApp, .stApp p, .stApp span, .stApp label, .stApp li,
+    .stMarkdown, .stMarkdown p, .stCaption, [data-testid="stWidgetLabel"] p {
+        color: var(--text-primary) !important;
+    }
+    .stCaption, [data-testid="stCaptionContainer"] { color: var(--text-secondary) !important; }
+
+    /* Headings */
+    h1, h2, h3 {
+        color: var(--gold) !important;
+        font-family: 'Sora', sans-serif !important;
+        font-weight: 700 !important;
+        letter-spacing: -0.01em;
+    }
+    h4, h5 {
+        color: var(--text-primary) !important;
+        font-family: 'Sora', sans-serif !important;
+        font-weight: 600 !important;
+    }
+
+    /* Sidebar */
+    [data-testid="stSidebar"] {
+        background: linear-gradient(180deg, #100C24 0%, #1A1440 100%);
+        border-right: 1px solid rgba(242, 197, 114, 0.12);
+    }
+
+    /* Glass cards used for st.container(border=True) */
+    [data-testid="stVerticalBlockBorderWrapper"] {
+        background: var(--surface);
+        border: 1px solid var(--surface-border) !important;
+        border-radius: 18px;
+        backdrop-filter: blur(6px);
+    }
+
     .mascot-card {
-        background: linear-gradient(135deg, #FF007A 0%, #7E22CE 100%);
-        padding: 2rem;
-        border-radius: 20px;
-        box-shadow: 0 10px 25px rgba(255, 0, 122, 0.3);
+        background: linear-gradient(135deg, rgba(167, 139, 250, 0.16) 0%, rgba(242, 197, 114, 0.10) 100%);
+        padding: 2.2rem;
+        border-radius: 22px;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.35);
         text-align: center;
         margin-bottom: 2rem;
-        border: 2px solid #FF70A6;
+        border: 1px solid var(--surface-border);
+        backdrop-filter: blur(8px);
     }
-    .mascot-avatar {
-        font-size: 80px;
-        line-height: 1;
-        margin-bottom: 10px;
+    .mascot-avatar { font-size: 70px; line-height: 1; margin-bottom: 10px; }
+
+    .hero-banner {
+        background: linear-gradient(90deg, rgba(167, 139, 250, 0.20) 0%, rgba(242, 197, 114, 0.14) 100%);
+        border: 1px solid var(--surface-border);
+        padding: 1.4rem 1.6rem;
+        border-radius: 18px;
+        margin-bottom: 1.6rem;
     }
-    div[data-testid="stVerticalBlock"] > div {
-        border-radius: 16px;
+
+    .profile-card {
+        background: var(--surface);
+        border: 1px solid var(--surface-border);
+        padding: 1.1rem;
+        border-radius: 14px;
+        text-align: center;
     }
-    h1, h2, h3 {
-        color: #FF70A6 !important;
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    }
+
+    /* Buttons */
     .stButton>button {
-        background: linear-gradient(90deg, #FF007A 0%, #FF70A6 100%);
-        color: white !important;
-        font-weight: bold;
-        border-radius: 12px;
+        background: linear-gradient(90deg, var(--gold) 0%, #E8A94E 100%);
+        color: #17123A !important;
+        font-family: 'Sora', sans-serif;
+        font-weight: 700;
+        border-radius: 10px;
         border: none;
         padding: 0.6rem 1.5rem;
-        box-shadow: 0 4px 15px rgba(255, 0, 122, 0.4);
-        transition: all 0.3s ease;
+        box-shadow: 0 4px 16px rgba(242, 197, 114, 0.25);
+        transition: all 0.2s ease;
     }
     .stButton>button:hover {
-        transform: scale(1.03);
-        box-shadow: 0 6px 20px rgba(255, 0, 122, 0.6);
+        transform: translateY(-1px);
+        box-shadow: 0 6px 20px rgba(242, 197, 114, 0.4);
     }
+    .stButton>button:focus-visible {
+        outline: 2px solid var(--violet);
+        outline-offset: 2px;
+    }
+
+    /* Radio buttons: readable text + gold selection state */
+    div[role="radiogroup"] label { color: var(--text-primary) !important; }
+    div[role="radiogroup"] input[type="radio"] { accent-color: var(--gold); }
+
+    /* Progress bar */
+    .stProgress > div > div > div > div { background-color: var(--gold) !important; }
+
+    /* Metrics */
+    [data-testid="stMetricValue"] {
+        font-family: 'JetBrains Mono', monospace;
+        color: var(--gold) !important;
+    }
+    [data-testid="stMetricLabel"] { color: var(--text-secondary) !important; }
+
+    /* Flashcard */
     .flashcard-box {
-        background: rgba(255,255,255,0.08);
-        border: 2px solid #FF70A6;
-        border-radius: 16px;
-        padding: 2.5rem 1.5rem;
+        background: var(--surface);
+        border: 1px solid var(--surface-border);
+        border-radius: 18px;
+        padding: 2.6rem 1.5rem;
         text-align: center;
         min-height: 140px;
         display: flex;
         align-items: center;
         justify-content: center;
+        backdrop-filter: blur(6px);
     }
+
+    /* Dataframe container polish */
+    [data-testid="stDataFrame"] { border-radius: 12px; overflow: hidden; }
+
+    hr { border-color: rgba(242, 197, 114, 0.15) !important; }
     </style>
     """,
     unsafe_allow_html=True,
@@ -174,8 +268,8 @@ if not st.session_state.onboarded:
         """
         <div class="mascot-card">
             <div class="mascot-avatar">🤖✨</div>
-            <h1 style="color: white !important;">Hi there! I'm Byte, your Tech Host!</h1>
-            <p style="font-size: 1.2rem; color: #FFE5EC;">Welcome to the ultimate Computer Literacy Hub! Before we begin, let's get acquainted!</p>
+            <h1 style="margin-bottom: 0.4rem;">Hi there! I'm Byte, your Tech Host!</h1>
+            <p style="font-size: 1.1rem; color: var(--text-secondary); max-width: 480px; margin: 0 auto;">Welcome to the ultimate Computer Literacy Hub. Before we begin, let's get acquainted!</p>
         </div>
         """,
         unsafe_allow_html=True,
@@ -206,10 +300,10 @@ if not st.session_state.onboarded:
 else:
     st.sidebar.markdown(
         f"""
-        <div style="background: rgba(255, 255, 255, 0.1); padding: 1rem; border-radius: 12px; text-align: center; border: 1px solid #FF70A6;">
-            <div style="font-size: 40px;">🤖</div>
-            <h3 style="margin:0; color: #FF70A6 !important;">Welcome, {st.session_state.user_name}!</h3>
-            <p style="margin:0; font-weight: bold; color: #A7F3D0;">✨ {st.session_state.user_title} ✨</p>
+        <div class="profile-card">
+            <div style="font-size: 36px;">🤖</div>
+            <h3 style="margin:0;">Welcome, {st.session_state.user_name}!</h3>
+            <p style="margin:0.2rem 0 0; font-weight: 600; color: var(--gold) !important;">✨ {st.session_state.user_title} ✨</p>
         </div>
         """,
         unsafe_allow_html=True,
@@ -229,9 +323,9 @@ else:
 
     st.markdown(
         f"""
-        <div style="background: linear-gradient(90deg, #7E22CE 0%, #FF007A 100%); padding: 1.2rem; border-radius: 16px; margin-bottom: 1.5rem; text-align: center;">
-            <h2 style="color: white !important; margin: 0;">Welcome, {st.session_state.user_title} {st.session_state.user_name}! 👑</h2>
-            <p style="color: #FBCFE8; margin: 0; font-size: 1.1rem;">Ready for some tech fun with Byte?</p>
+        <div class="hero-banner" style="text-align: center;">
+            <h2 style="margin: 0;">Welcome, {st.session_state.user_title} {st.session_state.user_name} 👑</h2>
+            <p style="color: var(--text-secondary) !important; margin: 0.3rem 0 0; font-size: 1.05rem;">Ready for some tech fun with Byte?</p>
         </div>
         """,
         unsafe_allow_html=True,
@@ -248,47 +342,55 @@ else:
             q_data = QUIZ_BANK[curr_i]
 
             st.progress(curr_i / total_q)
-            st.write(f"### Question {curr_i + 1} of {total_q}")
-            st.markdown(f"#### {q_data['question']}")
 
-            selected_option = st.radio(
-                "Select your choice:",
-                q_data["options"],
-                key=f"q_{curr_i}",
-                disabled=st.session_state.answer_submitted,
-            )
+            with st.container(border=True):
+                st.markdown(
+                    f'<p style="font-family:\'JetBrains Mono\',monospace; color: var(--text-secondary); '
+                    f'font-size: 0.85rem; letter-spacing: 0.05em; margin-bottom: 0.3rem;">'
+                    f'QUESTION {curr_i + 1} OF {total_q}</p>',
+                    unsafe_allow_html=True,
+                )
+                st.markdown(f"#### {q_data['question']}")
 
-            if not st.session_state.answer_submitted:
-                if st.button("Submit Answer", type="primary"):
-                    is_correct = selected_option == q_data["answer"]
-                    st.session_state.answer_submitted = True
-                    st.session_state.last_correct = is_correct
+                selected_option = st.radio(
+                    "Select your choice:",
+                    q_data["options"],
+                    key=f"q_{curr_i}",
+                    disabled=st.session_state.answer_submitted,
+                    label_visibility="collapsed",
+                )
 
-                    if is_correct:
-                        st.session_state.score += 10
+                if not st.session_state.answer_submitted:
+                    if st.button("Submit Answer", type="primary"):
+                        is_correct = selected_option == q_data["answer"]
+                        st.session_state.answer_submitted = True
+                        st.session_state.last_correct = is_correct
 
-                    st.session_state.answers_history.append(
-                        {
-                            "Question": q_data["question"],
-                            "Your Answer": selected_option,
-                            "Correct Answer": q_data["answer"],
-                            "Status": "Correct" if is_correct else "Incorrect",
-                        }
-                    )
-                    st.rerun()
-            else:
-                if st.session_state.last_correct:
-                    st.success(f"🎯 Spot on, {st.session_state.user_title}! You got it right!")
+                        if is_correct:
+                            st.session_state.score += 10
+
+                        st.session_state.answers_history.append(
+                            {
+                                "Question": q_data["question"],
+                                "Your Answer": selected_option,
+                                "Correct Answer": q_data["answer"],
+                                "Status": "Correct" if is_correct else "Incorrect",
+                            }
+                        )
+                        st.rerun()
                 else:
-                    st.error(f"❌ Oops! The correct answer was **{q_data['answer']}**.")
+                    if st.session_state.last_correct:
+                        st.success(f"🎯 Spot on, {st.session_state.user_title}! You got it right!")
+                    else:
+                        st.error(f"❌ Oops! The correct answer was **{q_data['answer']}**.")
 
-                st.info(f"💡 **Byte's Tip:** {q_data['explanation']}")
+                    st.info(f"💡 **Byte's Tip:** {q_data['explanation']}")
 
-                if st.button("Next Question ➡️", type="primary"):
-                    st.session_state.quiz_index += 1
-                    st.session_state.answer_submitted = False
-                    st.session_state.last_correct = None
-                    st.rerun()
+                    if st.button("Next Question ➡️", type="primary"):
+                        st.session_state.quiz_index += 1
+                        st.session_state.answer_submitted = False
+                        st.session_state.last_correct = None
+                        st.rerun()
 
         else:
             st.balloons()
@@ -313,12 +415,12 @@ else:
         with col2:
             if not st.session_state.show_definition:
                 st.markdown(
-                    f"""<div class="flashcard-box"><h2 style="color:#FF70A6 !important; margin:0;">📌 {card['term']}</h2></div>""",
+                    f"""<div class="flashcard-box"><h2 style="margin:0;">📌 {card['term']}</h2></div>""",
                     unsafe_allow_html=True,
                 )
             else:
                 st.markdown(
-                    f"""<div class="flashcard-box"><p style="font-size:1.1rem; margin:0;">📖 {card['definition']}</p></div>""",
+                    f"""<div class="flashcard-box"><p style="font-size:1.1rem; margin:0; color: var(--text-primary);">📖 {card['definition']}</p></div>""",
                     unsafe_allow_html=True,
                 )
 
@@ -354,11 +456,13 @@ else:
 
             col1, col2 = st.columns(2)
             with col1:
-                st.write("### Quiz Breakdown")
-                st.dataframe(df, use_container_width=True)
+                with st.container(border=True):
+                    st.write("#### Quiz Breakdown")
+                    st.dataframe(df, use_container_width=True)
             with col2:
-                st.write("### Accuracy Chart")
-                status_counts = df["Status"].value_counts()
-                st.bar_chart(status_counts)
+                with st.container(border=True):
+                    st.write("#### Accuracy Chart")
+                    status_counts = df["Status"].value_counts()
+                    st.bar_chart(status_counts)
         else:
             st.warning("No stats recorded yet! Complete the quiz to unlock your personal performance analytics.")
